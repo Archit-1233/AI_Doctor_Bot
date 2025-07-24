@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Virtual Consultation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Base Styles & Full Page Background */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e0f7fa 0%, #ffffff 100%); /* Soft, clean gradient */
+            color: #3f51b5;
+            min-height: 100vh;
+            display: grid; /* Use CSS Grid for the main layout */
+            grid-template-columns: 1fr; /* Default single column for mobile */
+            grid-template-rows: auto;
+            gap: 2.5rem; /* Space between major sections */
+            box-sizing: border-box;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            padding: 2.5rem 2vw; /* General padding for the body */
+            justify-content: center; /* Center content horizontally on small screens */
+            align-items: start; /* Align items to the start of their grid area */
+        }
+
+        /* Subtle background animation for depth */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, rgba(179, 229, 252, 0.2) 10%, transparent 10%) repeat;
+            background-size: 80px 80px;
+            animation: animateBG 30s linear infinite;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        @keyframes animateBG {
+            from { background-position: 0 0; }
+            to { background-position: 1000px 1000px; }
+        }
+
+        /* Desktop Layout with Two Columns at the Top */
+        @media (min-width: 900px) {
+            body {
+                grid-template-columns: minmax(300px, 1fr) minmax(300px, 1fr); /* Two columns for top section */
+                grid-template-areas:
+                    "hero doctor"
+                    "form form"; /* Form spans both columns below */
+                gap: 3rem 4rem; /* Vertical and horizontal gap for grid */
+                padding: 3rem 5vw; /* Adjusted padding for desktop */
+                justify-content: center; /* Maintain overall centering */
+            }
+
+            .hero-section {
+                grid-area: hero;
+                text-align: left; /* Aligned to the left */
+                align-items: flex-start; /* Align icon/title to the left within flex container */
+                padding-right: 0; /* No right padding, gap handles spacing */
+                padding-top: 0; /* No specific top padding for grid item */
+                padding-bottom: 0;
+            }
+
+            .consultation-visual {
+                grid-area: doctor;
+                display: flex; /* Use flex to center image internally */
+                justify-content: flex-end; /* Push image to the right */
+                align-items: flex-start; /* Align image to the top */
+                padding-left: 0; /* No left padding, gap handles spacing */
+                margin-top: 0; /* Reset margin */
+                margin-bottom: 0; /* Reset margin */
+                position: relative;
+                top: -1rem; /* Adjust position slightly up */
+            }
+
+            .consultation-visual img {
+                max-width: 100%; /* Allow image to fill its grid cell */
+                height: 25rem; /* Fixed height for consistency with left content */
+                object-fit: contain; /* Ensure image fits without cropping */
+                border-radius: 0; /* Remove border-radius for cleaner integration */
+                border: none; /* Remove border */
+                box-shadow: none; /* Remove shadow to blend into background */
+                align-self: flex-start; /* Align image to the top of its container */
+            }
+
+            .consultation-visual .caption {
+                position: absolute; /* Position caption relative to the image container */
+                bottom: -2.5rem; /* Place caption below the image */
+                right: 0; /* Align caption to the right */
+                font-size: 0.9rem;
+                color: #546e7a;
+            }
+
+            form {
+                grid-area: form; /* Form spans both columns */
+                display: flex;
+                flex-direction: column;
+                align-items: center; /* Center form content */
+                width: 100%;
+                max-width: 800px; /* Max width for the entire form content */
+                margin: 0 auto; /* Center the form block itself */
+                padding: 0; /* No internal padding for the grid item, handled by input zones */
+                box-sizing: border-box;
+            }
+        }
+
+        /* Hero Section Styling (Left Aligned) */
+        .hero-section {
+            text-align: center; /* Default center for mobile */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Default center for mobile */
+            color: #3f51b5;
+            padding: 2.5rem 1rem 1rem; /* Padding for the mobile hero section */
+        }
+
+        .medical-icon {
+            font-size: 4.5rem;
+            color: #4CAF50;
+            margin-bottom: 1rem;
+            text-shadow: 0 0.4rem 1rem rgba(76, 175, 80, 0.2);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-2rem); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-weight: 700;
+            font-size: 3.2rem;
+            color: #3f51b5;
+            text-shadow: 0 0.3rem 0.8rem rgba(0,0,0,0.1);
+            margin: 0;
+            line-height: 1.1;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            color: #607d8b;
+            line-height: 1.6;
+            margin-top: 1rem;
+            font-weight: 400;
+            animation: fadeIn 1.4s ease-out;
+            max-width: 40rem; /* Limit width for readability */
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Doctor Illustration - Mobile/Fallback Styling */
+        @media (max-width: 899px) { /* On smaller screens, doctor image goes below hero */
+            .consultation-visual {
+                margin-top: 2rem;
+                margin-bottom: 2.5rem;
+                text-align: center;
+                /* Max width for image to not be too big */
+                max-width: 300px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .consultation-visual img {
+                max-width: 18rem;
+                height: auto;
+                border-radius: 50%;
+                box-shadow: 0 1rem 3rem rgba(63, 81, 181, 0.3);
+                border: 0.5rem solid #b3e5fc;
+                object-fit: cover;
+            }
+            .consultation-visual .caption {
+                position: static; /* Reset absolute positioning */
+                margin-top: 1rem;
+                text-align: center;
+                right: auto;
+                bottom: auto;
+            }
+        }
+
+        /* Form Container (common to all screen sizes now for internal centering) */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers all child input zones */
+            width: 100%;
+            max-width: 800px; /* Max width for the entire form content */
+            gap: 2rem; /* Space between input zones */
+            padding: 0 1.5rem; /* Internal padding for form */
+            box-sizing: border-box;
+        }
+
+        /* Input Areas - Now "Quite Invisible" */
+        .input-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.8rem 1.5rem; /* Increased internal padding for breathing room */
+            background: rgba(255, 255, 255, 0.05); /* Nearly transparent background */
+            border-radius: 1.5rem; /* Retain rounded corners */
+            border: 1px solid rgba(179, 229, 252, 0.4); /* Very subtle border */
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.02); /* Minimal shadow */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            width: 100%; /* Take full width of parent (form) */
+            box-sizing: border-box;
+        }
+        .input-zone:hover {
+            border-color: rgba(179, 229, 252, 0.7); /* Slightly more visible on hover */
+            box-shadow: 0 0.6rem 1.8rem rgba(0,0,0,0.03);
+        }
+        
+        .input-zone label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #3f51b5;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-align: center;
+            /* No background or shadow on label itself, let it float naturally */
+            cursor: default;
+        }
+        .input-zone label i {
+            font-size: 1.1em;
+            color: #4CAF50;
+        }
+
+        /* Button Group Styling */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem; /* Good spacing between buttons */
+            width: 100%;
+            max-width: 35rem; /* Constrain width of button group for better flow */
+        }
+
+        /* Custom File Upload Button */
+        .upload-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            background-color: #64b5f6;
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border-radius: 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0.4rem 1.2rem rgba(100, 181, 246, 0.3);
+            border: none;
+            flex-shrink: 0;
+        }
+
+        .upload-button:hover {
+            background-color: #42a5f5;
+            transform: translateY(-0.2rem);
+            box-shadow: 0 0.6rem 1.5rem rgba(100, 181, 246, 0.4);
+        }
+
+        .upload-button i {
+            font-size: 1.2rem;
+        }
+
+        /* General Button Styling */
+        button {
+            padding: 0.9rem 1.8rem;
+            border: none;
+            border-radius: 1rem;
+            background-color: #3f51b5;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0.3rem 1rem rgba(63, 81, 181, 0.25);
+            min-width: 12rem; /* Adjusted for better proportion */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        button:hover {
+            background-color: #303f9f;
+            transform: translateY(-0.3rem);
+            box-shadow: 0 0.5rem 1.2rem rgba(63, 81, 181, 0.35);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 0.2rem 0.5rem rgba(63, 81, 181, 0.15);
+        }
+
+        /* Recording specific buttons */
+        button.record-btn {
+            background-color: #ef5350;
+            box-shadow: 0 0.3rem 1rem rgba(239, 83, 80, 0.25);
+        }
+        button.record-btn:hover {
+            background-color: #d32f2f;
+            box-shadow: 0 0.5rem 1.2rem rgba(239, 83, 80, 0.35);
+        }
+
+        button.stop-record-btn {
+            background-color: #66bb6a;
+            box-shadow: 0 0.3rem 1rem rgba(102, 187, 106, 0.25);
+        }
+        button.stop-record-btn:hover {
+            background-color: #388e3c;
+            box-shadow: 0 0.5rem 1.2rem rgba(102, 187, 106, 0.35);
+        }
+
+        /* Submit Button - Large & Prominent, within its own "invisible" zone */
+        .submit-zone {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1.5rem; /* Consistent padding with input-zones */
+            background: rgba(255, 255, 255, 0.05); /* Nearly transparent */
+            border-radius: 1.5rem;
+            border: 1px solid rgba(179, 229, 252, 0.4); /* Subtle border */
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.02); /* Minimal shadow */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .submit-zone:hover {
+            border-color: rgba(179, 229, 252, 0.7);
+            box-shadow: 0 0.6rem 1.8rem rgba(0,0,0,0.03);
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            box-shadow: 0 0.6rem 1.8rem rgba(76, 175, 80, 0.45);
+            width: auto;
+            padding: 1.2rem 3rem;
+            font-size: 1.3rem;
+            border-radius: 1.2rem;
+            margin-top: 0.5rem; /* Slight internal space if needed */
+        }
+        button[type="submit"]:hover {
+            background-color: #388E3C;
+            box-shadow: 0 0.9rem 2.5rem rgba(76, 175, 80, 0.6);
+        }
+
+        /* Image Preview Area - A well-defined component */
+        .image-preview-area {
+            position: relative;
+            margin-top: 1.5rem;
+            width: 100%;
+            max-width: 35rem; /* Consistent with button group max-width */
+            height: 20rem; /* Good fixed height for previews */
+            border-radius: 1.2rem;
+            border: 0.25rem dashed #90CAF9; /* Dashed border for visual cue */
+            background-color: rgba(255, 255, 255, 0.7); /* Slightly more visible background for preview area */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            color: #90CAF9;
+            flex-direction: column;
+            gap: 0.8rem;
+            text-align: center;
+        }
+        .image-preview-area:hover {
+             border-color: #64b5f6; /* Highlight on hover */
+             box-shadow: 0 0.6rem 1.8rem rgba(0,0,0,0.15);
+        }
+
+        .image-preview-area i.fa-image {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            color: #b3e5fc;
+        }
+
+        /* Scanning effect for image preview */
+        .image-preview-area.scanning::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent 0%, #4CAF50 50%, transparent 100%);
+            animation: scanLine 2s infinite linear;
+            z-index: 10;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        @keyframes scanLine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        #preview {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 0;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 6;
+        }
+
+        /* Loader */
+        .loader {
+            border: 0.7rem solid #e0e0e0;
+            border-top: 0.7rem solid #4CAF50;
+            border-radius: 50%;
+            width: 7rem;
+            height: 7rem;
+            animation: spin 1s linear infinite;
+            display: none;
+            z-index: 7;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Analysis feedback text */
+        .analysis-feedback {
+            font-size: 0.9rem;
+            color: #424242;
+            margin-top: 1.2rem;
+            min-height: 2rem;
+            font-weight: 500;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.8rem;
+            box-shadow: 0 0.1rem 0.3rem rgba(0,0,0,0.03);
+            width: 100%;
+            max-width: 30rem;
+        }
+
+        /* Toast notification */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(63, 81, 181, 0.95);
+            color: white;
+            padding: 0.9rem 1.8rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 999;
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.35);
+            animation: fadeInOut 4s forwards;
+            font-weight: 500;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(2rem); }
+            10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(2rem); }
+        }
+
+        /* Camera Feed & Controls */
+        #camera-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0;
+            display: none;
+            transform: scaleX(-1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 5;
+        }
+        .camera-controls {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            gap: 1rem;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 0.8rem 1.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.5);
+            flex-wrap: wrap;
+        }
+        .camera-controls button {
+            padding: 0.7rem 1.4rem;
+            font-size: 0.85rem;
+            min-width: unset;
+            box-shadow: none;
+            transform: none;
+            flex-shrink: 0;
+            color: white;
+            background-color: #3f51b5;
+        }
+        .camera-controls button:hover {
+            transform: none;
+            box-shadow: none;
+            background-color: #303f9f;
+        }
+        .camera-controls .record-btn {
+            background-color: #ef5350;
+        }
+        .camera-controls .record-btn:hover {
+            background-color: #d32f2f;
+        }
+        .camera-controls .stop-record-btn {
+            background-color: #607d8b;
+        }
+        .camera-controls .stop-record-btn:hover {
+            background-color: #455a64;
+        }
+
+        /* Recording Indicator Visuals */
+        .recording-indicator {
+            display: none;
+            position: absolute;
+            top: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3rem;
+            height: 3rem;
+            background-color: rgba(239, 83, 80, 0.15);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite ease-out;
+            z-index: 1;
+        }
+
+        .recording-indicator.active {
+            display: block;
+        }
+
+        @keyframes pulse {
+            0% { transform: translateX(-50%) scale(0.8); opacity: 0.6; }
+            50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+            100% { transform: translateX(-50%) scale(0.8); opacity: 0.6; }
+        }
+
+        .recording-indicator::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background-color: #ef5350;
+            box-shadow: 0 0 0 0 rgba(239, 83, 80, 0.4);
+            animation: wave 1.5s infinite ease-out;
+            z-index: 2;
+        }
+
+        @keyframes wave {
+            0% { box-shadow: 0 0 0 0 rgba(239, 83, 80, 0.4); }
+            70% { box-shadow: 0 0 0 1rem rgba(239, 83, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 83, 80, 0); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            h2 {
+                font-size: 2.8rem;
+            }
+            .intro-text {
+                font-size: 1rem;
+            }
+            .medical-icon {
+                font-size: 4rem;
+            }
+            .image-preview-area {
+                height: 18rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                gap: 2rem; /* Reduced gap for smaller screens */
+                padding: 2rem 2vw;
+            }
+            .hero-section {
+                padding: 1.5rem 0.8rem 1rem;
+            }
+            h2 {
+                font-size: 2.2rem;
+            }
+            .intro-text {
+                font-size: 0.95rem;
+            }
+            .medical-icon {
+                font-size: 3.5rem;
+            }
+            .consultation-visual {
+                margin-top: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            form {
+                gap: 1.5rem;
+                padding: 0 0.8rem;
+            }
+            .input-zone {
+                padding: 1.5rem 1.2rem;
+            }
+            .input-zone label {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+            .button-group {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            .upload-button, button {
+                width: 100%; /* Make buttons fill group width */
+                font-size: 0.85rem;
+                padding: 0.8rem 1.5rem;
+            }
+            .upload-button i, button i {
+                font-size: 0.85rem;
+            }
+            button[type="submit"] {
+                font-size: 0.85rem;
+                padding: 0.8rem 1.5rem;
+            }
+            .image-preview-area {
+                height: 16rem;
+                max-width: 25rem; /* Match button group */
+            }
+            .image-preview-area i.fa-image {
+                font-size: 3rem;
+            }
+            .analysis-feedback {
+                font-size: 0.8rem;
+            }
+            #toast {
+                font-size: 0.85rem;
+                padding: 0.8rem 1.5rem;
+                bottom: 1.5rem;
+            }
+            .camera-controls button {
+                font-size: 0.75rem;
+                padding: 0.6rem 1.2rem;
+            }
+            .recording-indicator {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+            .recording-indicator::after {
+                width: 1.2rem;
+                height: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1.5rem 1vw;
+            }
+            .hero-section {
+                padding: 1.2rem 0.5rem 0.8rem;
+            }
+            h2 {
+                font-size: 1.9rem;
+            }
+            .intro-text {
+                font-size: 0.88rem;
+            }
+            .medical-icon {
+                font-size: 3rem;
+            }
+            .consultation-visual {
+                margin-top: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            .consultation-visual img {
+                max-width: 10rem;
+            }
+            .consultation-visual .caption {
+                font-size: 0.85rem;
+            }
+            form {
+                gap: 1.2rem;
+                padding: 0 0.5rem;
+            }
+            .input-zone {
+                padding: 1.2rem 1rem;
+            }
+            .input-zone label {
+                font-size: 0.9rem;
+                margin-bottom: 0.8rem;
+            }
+            .button-group {
+                gap: 0.7rem;
+            }
+            .upload-button, button {
+                font-size: 0.75rem;
+                padding: 0.7rem 1.3rem;
+            }
+            button[type="submit"] {
+                font-size: 0.75rem;
+                padding: 0.7rem 1.3rem;
+            }
+            .image-preview-area {
+                height: 14rem;
+                max-width: unset;
+            }
+            .image-preview-area i.fa-image {
+                font-size: 2.5rem;
+            }
+            .analysis-feedback {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+            }
+            #toast {
+                font-size: 0.75rem;
+                padding: 0.6rem 1.2rem;
+                bottom: 1rem;
+            }
+            .camera-controls button {
+                font-size: 0.65rem;
+                padding: 0.5rem 0.8rem;
+                gap: 0.4rem;
+            }
+            .recording-indicator {
+                width: 2rem;
+                height: 2rem;
+            }
+            .recording-indicator::after {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <div class="hero-section">
+        <span class="medical-icon"><i class="fas fa-stethoscope"></i></span>
+        <h2>Your Virtual Consultation</h2>
+        <p class="intro-text">Welcome! Use this platform to share an image and describe your symptoms verbally. Our AI-powered system will provide an initial assessment to guide your next steps in your health journey.</p>
+    </div>
+
+    <div class="consultation-visual">
+        <img src="static\img\doctor.png" alt="Virtual Doctor Avatar">
+        <span class="caption">Dr. AI - Your Virtual Assistant</span>
+    </div>
+
+    <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+        <div class="input-zone image-upload-zone">
+            <label><i class="fas fa-image"></i> Upload or Take a Photo:</label>
+            <div class="button-group">
+                <input type="file" name="image" id="image-upload" accept="image/*" style="display: none;">
+                <label for="image-upload" class="upload-button"><i class="fas fa-cloud-upload-alt"></i> Choose Image</label>
+                <button type="button" onclick="startCamera()"><i class="fas fa-camera"></i> Take Photo</button>
+            </div>
+
+            <div class="image-preview-area" id="imagePreviewArea">
+                <video id="camera-feed" autoplay playsinline></video>
+                <canvas id="canvas" style="display:none;"></canvas>
+                <div class="camera-controls">
+                    <button type="button" class="record-btn" onclick="takeSnapshot()"><i class="fas fa-camera-retro"></i> Capture</button>
+                    <button type="button" class="stop-record-btn" onclick="stopCamera()"><i class="fas fa-times-circle"></i> Cancel</button>
+                </div>
+                <img id="preview" alt="Preview of your uploaded image">
+                <div class="loader" id="imageLoader"></div>
+                <i class="fas fa-image" id="previewPlaceholderIcon"></i>
+                <span id="previewPlaceholderText">Your image preview will appear here</span>
+            </div>
+            <div class="analysis-feedback" id="imageAnalysisFeedback"></div>
+        </div>
+
+        <div class="input-zone audio-record-zone">
+            <label><i class="fas fa-microphone"></i> Describe Your Symptoms:</label>
+            <div class="button-group" style="position: relative;">
+                <div class="recording-indicator" id="recordingIndicator"></div>
+                <button type="button" onclick="startRecording()" class="record-btn"><i class="fas fa-microphone"></i> Start Recording</button>
+                <button type="button" onclick="stopRecording()" class="stop-record-btn"><i class="fas fa-stop-circle"></i> Stop Recording</button>
+            </div>
+            <input type="file" name="audio" id="audio" hidden>
+            <div class="analysis-feedback" id="audioAnalysisFeedback"></div>
+        </div>
+
+        <div class="submit-zone">
+            <button type="submit"><i class="fas fa-paper-plane"></i> Submit for AI-Powered Assessment</button>
+        </div>
+    </form>
+
+    <div id="toast"></div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let cameraStream; // To store the camera stream
+
+        const cameraFeed = document.getElementById('camera-feed');
+        const canvas = document.getElementById('canvas');
+        const imageUploadInput = document.getElementById('image-upload');
+        const preview = document.getElementById('preview');
+        const imageLoader = document.getElementById('imageLoader');
+        const imageAnalysisFeedback = document.getElementById('imageAnalysisFeedback');
+        const audioAnalysisFeedback = document.getElementById('audioAnalysisFeedback');
+        const cameraControls = document.querySelector('.camera-controls');
+        const imagePreviewArea = document.getElementById('imagePreviewArea');
+        const previewPlaceholderIcon = document.getElementById('previewPlaceholderIcon');
+        const previewPlaceholderText = document.getElementById('previewPlaceholderText');
+        const recordingIndicator = document.getElementById('recordingIndicator'); // New element
+
+        // Add event listener to the hidden file input
+        imageUploadInput.addEventListener('change', previewImage);
+
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerHTML = message;
+            toast.style.display = "block";
+            toast.style.animation = 'none'; // Reset animation
+            void toast.offsetWidth; // Trigger reflow
+            toast.style.animation = 'fadeInOut 4s forwards'; // Re-apply animation
+        }
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+                    audioChunks = [];
+
+                    recordingIndicator.classList.add('active'); // Show recording indicator
+                    audioAnalysisFeedback.innerText = 'Recording... Speak clearly.';
+                    showToast("🎙️ Recording your symptoms... Please speak clearly.");
+
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        recordingIndicator.classList.remove('active'); // Hide recording indicator
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const file = new File([audioBlob], "recorded_audio.webm", { type: 'audio/webm' });
+                        const container = new DataTransfer();
+                        container.items.add(file);
+                        document.getElementById("audio").files = container.files;
+
+                        audioAnalysisFeedback.innerText = 'Voice description captured. Thank you.';
+                        showToast("✅ Voice recording captured.");
+                        // Stop audio stream tracks
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+
+                })
+                .catch(err => {
+                    showToast("Microphone access required for voice description. Please enable in browser settings.");
+                    console.error("Microphone access error:", err);
+                });
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+            } else {
+                showToast("No active recording to stop. Please start recording first.");
+            }
+        }
+
+        // --- Camera Functionality ---
+        function startCamera() {
+            // Hide preview elements and placeholder
+            preview.style.display = 'none';
+            imageLoader.style.display = 'none';
+            imageAnalysisFeedback.innerText = '';
+            imagePreviewArea.classList.remove('scanning'); // Ensure no scanning effect while camera is live
+            previewPlaceholderIcon.style.display = 'none';
+            previewPlaceholderText.style.display = 'none';
+
+
+            // Hide the 'Choose Image' button and 'Take Photo' button
+            const chooseImageButton = document.querySelector('.upload-button');
+            const takePhotoButton = document.querySelector('.button-group button[onclick="startCamera()"]');
+            if (chooseImageButton) chooseImageButton.style.display = 'none';
+            if (takePhotoButton) takePhotoButton.style.display = 'none';
+
+
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }) // Prefer rear camera
+                .then(stream => {
+                    cameraStream = stream;
+                    cameraFeed.srcObject = stream;
+                    cameraFeed.style.display = 'block'; // Show camera feed
+                    cameraControls.style.display = 'flex'; // Show camera controls
+                    showToast("📷 Camera active. Aim and capture.");
+                })
+                .catch(err => {
+                    showToast("Camera access denied. Please allow camera access to take a photo.");
+                    console.error("Camera access error:", err);
+                    // Re-show the input buttons if camera access fails
+                    if (chooseImageButton) chooseImageButton.style.display = 'flex'; // Show as flex because it's a label
+                    if (takePhotoButton) takePhotoButton.style.display = 'flex';
+                    // Re-show placeholder if camera fails
+                    previewPlaceholderIcon.style.display = 'block';
+                    previewPlaceholderText.style.display = 'block';
+                });
+        }
+
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraFeed.srcObject = null;
+                cameraFeed.style.display = 'none'; // Hide camera feed
+                cameraControls.style.display = 'none'; // Hide camera controls
+                showToast("Camera stopped.");
+            }
+            // Always re-show the input buttons after camera is stopped/cancelled
+            const chooseImageButton = document.querySelector('.upload-button');
+            const takePhotoButton = document.querySelector('.button-group button[onclick="startCamera()"]');
+            if (chooseImageButton) chooseImageButton.style.display = 'flex'; // Show as flex because it's a label
+            if (takePhotoButton) takePhotoButton.style.display = 'flex';
+
+            // After stopping camera, if there was a photo uploaded/captured, show its preview.
+            if (imageUploadInput.files && imageUploadInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    preview.src = reader.result;
+                    preview.style.display = 'block';
+                    // Hide placeholder if an image is loaded
+                    previewPlaceholderIcon.style.display = 'none';
+                    previewPlaceholderText.style.display = 'none';
+                };
+                reader.readAsDataURL(imageUploadInput.files[0]);
+            } else {
+                preview.style.display = 'none'; // No image selected/captured, so hide preview
+                // Show placeholder if no image is present
+                previewPlaceholderIcon.style.display = 'block';
+                previewPlaceholderText.style.display = 'block';
+            }
+        }
+
+        function takeSnapshot() {
+            canvas.width = cameraFeed.videoWidth;
+            canvas.height = cameraFeed.videoHeight;
+            canvas.getContext('2d').drawImage(cameraFeed, 0, 0, canvas.width, canvas.height);
+            stopCamera(); // Stop camera after taking snapshot
+
+            canvas.toBlob(blob => {
+                const file = new File([blob], "camera_photo.png", { type: 'image/png' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                imageUploadInput.files = dataTransfer.files; // Assign the photo to the file input
+
+                // Trigger preview logic immediately for the captured photo
+                previewImage({ target: { files: [file] } });
+                showToast("📸 Photo captured!");
+            }, 'image/png');
+        }
+
+        // --- Image Preview Logic (updated for scanning effect) ---
+        function previewImage(event) {
+            // Re-show the 'Choose Image' and 'Take Photo' buttons if they were hidden by camera
+            const chooseImageButton = document.querySelector('.upload-button');
+            const takePhotoButton = document.querySelector('.button-group button[onclick="startCamera()"]');
+            if (chooseImageButton) chooseImageButton.style.display = 'flex';
+            if (takePhotoButton) takePhotoButton.style.display = 'flex';
+            
+            cameraFeed.style.display = 'none';
+            cameraControls.style.display = 'none';
+            if (cameraStream) { // Ensure camera stream is stopped if it was active
+                cameraStream.getTracks().forEach(track => track.stop());
+            }
+
+            const file = event.target.files[0];
+            if (!file) {
+                preview.style.display = "none";
+                preview.src = "";
+                imageLoader.style.display = 'none';
+                imageAnalysisFeedback.innerText = '';
+                imagePreviewArea.classList.remove('scanning');
+                previewPlaceholderIcon.style.display = 'block'; // Show placeholder if no file
+                previewPlaceholderText.style.display = 'block';
+                return;
+            }
+
+            // Hide placeholder, hide previous preview, show loader and start scanning animation
+            previewPlaceholderIcon.style.display = 'none';
+            previewPlaceholderText.style.display = 'none';
+            preview.style.display = "none";
+            imageLoader.style.display = 'block';
+            imageAnalysisFeedback.innerText = 'Analyzing your image...';
+            imagePreviewArea.classList.add('scanning'); // Start scanning animation
+
+            const reader = new FileReader();
+            reader.onload = function() {
+                // Simulate scanning/processing delay
+                setTimeout(() => {
+                    imageLoader.style.display = 'none'; // Hide loader
+                    preview.src = reader.result;
+                    preview.style.display = "block"; // Show the image preview
+                    imageAnalysisFeedback.innerText = 'Initial observations: Visual analysis complete.'; // Simulated feedback
+                    imagePreviewArea.classList.remove('scanning'); // Stop scanning animation
+                    showToast("Image analyzed. Please review.");
+                }, 2000); // 2 second delay for scanning simulation
+            }
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
